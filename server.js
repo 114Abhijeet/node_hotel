@@ -1,10 +1,12 @@
 //app.js--server.js
 const express = require("express");
 const app = express();
-const port = 80;
+// const port = 80;
+const PORT=process.env.PORT||80;
 // When your server runs(server.js file) it imports this db.js file to establish the database connection before
 //handling HTTP requests
 const db=require('./db'); // Exit mongod process(ctrl+c)to see the effect of event listeners.
+require('dotenv').config();
 // Write npm install body-parser in terminal
 const bodyParser=require('body-parser');
 app.use(bodyParser.json());
@@ -66,6 +68,6 @@ app.get("/",(req, res)=>{
 const personRoutes=require('./routes/personRoutes');
 // Use the routers 
 app.use('/person',personRoutes); // personRoutes.js file me '/' endpoint se koi get request hoga to usko hit karega.
-  app.listen(port, ()=>{
-    console.log(`The application started successfully on port ${port}`);
+app.listen(PORT, ()=>{
+    console.log(`The application started successfully on port ${PORT}`);
 });

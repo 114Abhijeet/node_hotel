@@ -1,8 +1,10 @@
 // app.js--db.js
 const mongoose=require('mongoose');
+require('dotenv').config();
 // Define the MongoDB Connection URL
-const mongoURL='mongodb://127.0.0.1:27017/hotels';
-
+// const mongoURL='mongodb://127.0.0.1:27017/hotels'; //local connection
+//const mongoURL='mongodb+srv://HelloWorld:HelloWorld12345@cluster0.chlzhtq.mongodb.net/'; //Online Atlas Connection
+const mongoURL=process.env.MongoDB_URL;
 // Set up MongoDB Connection
 // This step initializes the connection process but does not actually connect at this point
 mongoose.connect(mongoURL,{useNewUrlParser: true,useUnifiedTopology:true});
