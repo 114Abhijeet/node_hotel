@@ -7,11 +7,36 @@ const PORT=process.env.PORT||3000;
 // When your server runs(server.js file) it imports this db.js file to establish the database connection before
 //handling HTTP requests
 const db=require('./db'); // Exit mongod process(ctrl+c)to see the effect of event listeners.
+const passport = require('./auth');
+
 // Write npm install body-parser in terminal
 const bodyParser=require('body-parser');
 app.use(bodyParser.json());
 // const Person=require('./Models/Person'); -- To use router import it in personRoutes.js file
-app.get("/",(req, res)=>{ 
+
+// Defining Middleware Function
+const logRequest = (req, res, next) => {
+    console.log(`[${new Date().toLocaleString()}] Request Made to : ${req.originalUrl}`);
+ // if you comment the next() function,date and url will be printed as it is before next() in code but we will not
+ // get the response from server    
+    next(); // Move on to the next phase(if any work left in between request and server)
+}
+
+// To use Middleware Function in all of the routes
+app.use(logRequest);
+
+// To use Middleware Functions in this routes(i.e http://localhost:3000)-- Date and URL will be printed in console
+// app.get("/",logRequest,(req, res)=>{ 
+//     res.status(200).send('Welcome to my Hotel') ;
+//    });
+
+//Initialize Passport
+app.use(passport.initialize());
+
+//We Authenticate the "/" URL:http://localhost:3000(below get request)with the local strategy(here local)and session
+// We can authenticate multiple end points 
+const localAuthMiddleware = passport.authenticate('local', {session: false})
+app.get("/",localAuthMiddleware,(req, res)=>{ 
     res.status(200).send('Welcome to my Hotel') ;
    });
    
@@ -66,8 +91,14 @@ app.get("/",(req, res)=>{
 
 // Import the Router files 
 const personRoutes=require('./routes/personRoutes');
+
 // Use the routers 
 app.use('/person',personRoutes); // personRoutes.js file me '/' endpoint se koi get request hoga to usko hit karega.
+
+//To use Middleware Functions in the Person routes only. 
+// Use the routers 
+// app.use('/person',logRequest,personRoutes); // personRoutes.js file me '/' endpoint se koi get request hoga to usko hit karega.
+
 app.listen(PORT, ()=>{
     console.log(`The application started successfully on port ${PORT}`);
 });
