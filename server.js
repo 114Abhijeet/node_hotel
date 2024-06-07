@@ -35,7 +35,7 @@ app.use(passport.initialize());
 
 //We Authenticate the "/" URL:http://localhost:3000(below get request)with the local strategy(here local)and session
 // We can authenticate multiple end points 
-const localAuthMiddleware = passport.authenticate('local', {session: false})
+const localAuthMiddleware = passport.authenticate('local', {session: false});
 app.get("/",localAuthMiddleware,(req, res)=>{ 
     res.status(200).send('Welcome to my Hotel') ;
    });
